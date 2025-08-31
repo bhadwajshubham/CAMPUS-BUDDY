@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect Pro - My Profile</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+<body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-200">
+
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <a href="index.html" class="text-3xl font-bold bg-clip-text text-transparent cursor-pointer holographic-effect">
+                🚀 CampusConnect Pro
+            </a>
+            
+            <div id="nav-desktop" class="hidden md:flex items-center space-x-6"></div>
+
+            <div class="md:hidden flex items-center">
+                <button id="theme-toggle-mobile" class="p-3 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"></button>
+                <button id="mobile-menu-btn" class="text-gray-900 dark:text-gray-100 p-2"><svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-menu" class="mobile-menu md:hidden fixed top-0 right-0 h-full w-80 bg-white dark:bg-slate-800 shadow-2xl z-50">
+        </div>
+</nav>
+
+    <main class="pt-24 pb-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-8">My Profile</h1>
+            
+            <div class="bg-white dark:bg-card-dark p-6 sm:p-8 rounded-2xl shadow-lg">
+                <form id="profile-form" class="space-y-6">
+                    <div class="flex items-center space-x-6 pb-6 border-b border-gray-200 dark:border-slate-700">
+                        <img id="avatar-preview" class="w-24 h-24 rounded-full object-cover" src="https://i.pravatar.cc/150" alt="Profile Avatar">
+                        <div>
+                            <label for="profile-pic" class="cursor-pointer bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-4 py-2 rounded-lg font-semibold">
+                                Upload Photo
+                            </label>
+                            <input id="profile-pic" type="file" class="hidden">
+                            <p class="text-sm text-gray-500 mt-2">PNG or JPG. Max size of 2MB.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="font-semibold" for="profile-name">Full Name</label>
+                            <input type="text" id="profile-name" class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                        </div>
+                        <div>
+                            <label class="font-semibold" for="profile-email">Email Address</label>
+                            <input type="email" id="profile-email" disabled class="w-full mt-2 p-3 border rounded-lg bg-gray-100 dark:bg-slate-800 dark:border-slate-700 cursor-not-allowed">
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="font-semibold" for="profile-college">College / University</label>
+                            <input type="text" id="profile-college" placeholder="e.g., Indian Institute of Technology" class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                        </div>
+                        <div>
+                            <label class="font-semibold" for="profile-contact">Contact Number</label>
+                            <input type="tel" id="profile-contact" placeholder="e.g., 9876543210" class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                        </div>
+                    </div>
+
+                    <div class="pt-6 text-right">
+                        <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold text-lg">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="bg-dark-bg text-white py-16">
+       </footer>
+
+    <script type="module" src="/js/script.js" defer></script>
+    <script type="module" src="/js/profile.js" defer></script>
+</body>
+</html>

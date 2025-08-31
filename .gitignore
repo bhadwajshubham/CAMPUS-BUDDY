@@ -1,0 +1,10 @@
+# Environment variables - DO NOT UPLOAD
+.env
+
+# Dependencies
+node_modules
+
+# Firebase config file (if you have one)
+firebase-config.js
+js/config.js
+js/config.js

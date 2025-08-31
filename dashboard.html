@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect Pro - Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body id="dashboard-page" class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-200">
+
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="text-3xl font-bold bg-clip-text text-transparent cursor-pointer holographic-effect">
+                    🚀 CampusConnect Pro
+                </a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="nav-link text-gray-900 dark:text-gray-100 font-medium">Home</a>
+                    <a href="events.html" class="nav-link text-gray-900 dark:text-gray-100 font-medium">Events</a>
+                    <a href="dashboard.html" class="nav-link text-gray-900 dark:text-gray-100 font-medium">Dashboard</a>
+                    <button id="theme-toggle" class="p-3 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"></button>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="theme-toggle-mobile" class="p-3 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"></button>
+                    <button id="mobile-menu-btn" class="text-gray-900 dark:text-gray-100 p-2"><svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-20">
+
+        <div id="student-view" class="dashboard-view" style="display: none;">
+            <div class="pt-4 pb-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                        <h1 id="student-welcome-header" class="text-4xl md:text-5xl font-bold">Welcome, Student!</h1>
+                        <button class="logout-btn mt-4 md:mt-0 bg-red-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-red-600"><i class="fa-solid fa-right-from-bracket mr-2"></i>Logout</button>
+                    </div>
+                    <div class="bg-white dark:bg-card-dark p-6 sm:p-8 rounded-2xl shadow-lg">
+                        <div class="border-b border-gray-200 dark:border-slate-700 mb-6">
+                            <nav class="-mb-px flex space-x-8" aria-label="Tabs"><button class="tab-btn active" data-target="upcoming-panel">Upcoming Events</button><button class="tab-btn" data-target="past-panel">Past Events & Certificates</button></nav>
+                        </div>
+                        <div id="upcoming-panel" class="tab-panel">
+                            <div id="student-upcoming-list" class="space-y-4">
+                                <div class="text-center py-12"><i class="fa-solid fa-spinner fa-spin text-4xl text-gray-400"></i><p class="mt-4 text-gray-500">Loading your events...</p></div>
+                            </div>
+                        </div>
+                        <div id="past-panel" class="tab-panel" style="display: none;">
+                           <div id="student-past-list" class="space-y-4">
+                                <div class="text-center py-12"><i class="fa-solid fa-spinner fa-spin text-4xl text-gray-400"></i><p class="mt-4 text-gray-500">Loading your past events...</p></div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="organizer-view" class="dashboard-view" style="display: none;">
+            <div class="flex min-h-screen bg-light-bg dark:bg-dark-bg">
+                <aside class="w-64 bg-white dark:bg-card-dark p-6 hidden sm:block flex-shrink-0">
+                    <h2 id="organizer-welcome-header" class="text-2xl font-bold mb-8">Organizer Panel</h2>
+                    <nav class="space-y-2">
+                        <button class="tab-btn active w-full text-left flex items-center p-3 rounded-lg" data-target="my-events-panel-organizer"><i class="fa-solid fa-calendar-days w-6 mr-3"></i>My Events</button>
+                        <a href="create-event.html" class="w-full text-left flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700"><i class="fa-solid fa-plus w-6 mr-3"></i>Create Event</a>
+                        <a href="scanner.html" class="w-full text-left flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700"><i class="fa-solid fa-qrcode w-6 mr-3"></i>Open Scanner</a>
+                        <button class="logout-btn w-full text-left flex items-center p-3 rounded-lg mt-8 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"><i class="fa-solid fa-right-from-bracket w-6 mr-3"></i>Logout</button>
+                    </nav>
+                </aside>
+                <main class="flex-1 flex flex-col overflow-hidden p-6">
+                    <div id="my-events-panel-organizer" class="tab-panel">
+                        <h1 class="text-3xl font-bold mb-6">My Events</h1>
+                        <div id="organizer-event-list" class="space-y-4">
+                            <div class="text-center py-12"><i class="fa-solid fa-layer-group text-4xl text-gray-400 mb-4"></i><h3 class="text-xl font-semibold">No Events Found</h3><p class="text-gray-500">Click on "Create Event" to get started.</p></div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        
+        <div id="spoc-view" class="dashboard-view pt-4 pb-16" style="display: none;">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-4xl font-bold">SPOC Dashboard</h1>
+                    <button class="logout-btn bg-red-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-red-600">Logout</button>
+                </div>
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4">Manage Organizers</h2>
+                    <p class="text-gray-500">Functionality to invite and manage organizers for your university will be here.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="superAdmin-view" class="dashboard-view" style="display: none;">
+        <div class="pt-4 pb-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-4xl font-bold">Super Admin Panel</h1>
+                    <button class="logout-btn bg-red-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-red-600">Logout</button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl shadow-lg">
+                        <h2 class="text-2xl font-bold mb-4">Add New University</h2>
+                        <form id="add-university-form" class="space-y-4">
+                            <div>
+                                <label for="uni-name" class="font-semibold">University Name</label>
+                                <input type="text" id="uni-name" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                            </div>
+                            <button type="submit" class="w-full bg-indigo-600 text-white p-3 rounded-lg font-bold">Add University</button>
+                        </form>
+                    </div>
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl shadow-lg">
+                        <h2 class="text-2xl font-bold mb-4">Appoint University SPOC</h2>
+                        <form id="appoint-spoc-form" class="space-y-4">
+                            <div>
+                                <label for="spoc-email" class="font-semibold">SPOC's University Email</label>
+                                <input type="email" id="spoc-email" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                            </div>
+                            <div>
+                                <label for="university-select" class="font-semibold">Assign to University</label>
+                                <select id="university-select" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></select>
+                            </div>
+                            <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg font-bold">Appoint SPOC</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl shadow-lg mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Manage Users</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b dark:border-slate-700">
+                                    <th class="p-3">Full Name</th>
+                                    <th class="p-3">Email</th>
+                                    <th class="p-3">Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="superAdmin-users-list">
+                                <tr><td colspan="3" class="p-3 text-center text-gray-500">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4">Manage Events</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b dark:border-slate-700">
+                                    <th class="p-3">Event Name</th>
+                                    <th class="p-3">Organizer ID</th>
+                                    <th class="p-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="superAdmin-events-list">
+                                <tr><td colspan="3" class="p-3 text-center text-gray-500">Loading events...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+        <div id="qr-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-[100] transition-opacity duration-300 opacity-0 pointer-events-none">
+            <div class="modal-box stagger-animation">
+                <button id="close-modal" class="absolute top-4 right-4 text-2xl font-bold">&times;</button>
+                <h3 class="text-2xl font-bold mb-4 text-center">Your Ticket</h3>
+                <p class="text-center text-gray-600 dark:text-gray-300 mb-4">Scan this at the event gate for entry.</p>
+                <div class="bg-white p-4 rounded-lg">
+                    <img src="" alt="QR Code">
+                </div>
+                <p id="qr-event-title" class="text-center font-bold mt-4 text-lg">Event Name</p>
+            </div>
+        </div>
+    
+        <div id="attendee-modal" class="modal-overlay">
+            <div class="modal-box stagger-animation w-full max-w-lg">
+                <button id="close-attendee-modal" class="absolute top-4 right-4 text-2xl font-bold">&times;</button>
+                <h3 id="attendee-modal-title" class="text-2xl font-bold mb-6">Event Attendees</h3>
+                <div id="attendee-list-container" class="space-y-3 max-h-96 overflow-y-auto">
+                    <p class="text-gray-500">Loading attendees...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="attendance-modal" class="modal-overlay">
+            <div class="modal-box stagger-animation w-full max-w-lg">
+                <button id="close-attendance-modal" class="absolute top-4 right-4 text-2xl font-bold">&times;</button>
+                <h3 id="attendance-modal-title" class="text-2xl font-bold mb-6">Event Attendance</h3>
+                <div id="attendance-list-container" class="space-y-3 max-h-96 overflow-y-auto">
+                    <p class="text-gray-500">Loading attendance records...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="/js/script.js" defer></script>
+    <script type="module" src="/js/dashboard.js" defer></script>
+</body>
+</html>

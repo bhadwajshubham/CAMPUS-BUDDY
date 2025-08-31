@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect Pro - Sign Up</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-200">
+
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <a href="index.html" class="text-3xl font-bold bg-clip-text text-transparent cursor-pointer holographic-effect">
+                🚀 CampusConnect Pro
+            </a>
+            
+            <div id="nav-desktop" class="hidden md:flex items-center space-x-6"></div>
+
+            <div class="md:hidden flex items-center">
+                <button id="theme-toggle-mobile" class="p-3 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"></button>
+                <button id="mobile-menu-btn" class="text-gray-900 dark:text-gray-100 p-2"><svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-menu" class="mobile-menu md:hidden fixed top-0 right-0 h-full w-80 bg-white dark:bg-slate-800 shadow-2xl z-50">
+        </div>
+</nav>
+
+    <main>
+        <div class="min-h-screen flex items-center justify-center gradient-bg p-4">
+            <div class="w-full max-w-4xl mx-auto">
+                <div class="bg-white dark:bg-card-dark shadow-2xl rounded-3xl overflow-hidden grid md:grid-cols-2">
+                    <div class="p-10">
+                        <h2 class="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-white">Create Student Account</h2>
+                        <form id="signup-form" class="space-y-4">
+                           <div class="input-group"><input type="text" id="signup-name" placeholder="Full Name" required class="w-full p-3 rounded-lg border dark:bg-slate-800 dark:border-slate-700"></div>
+                           <div class="input-group"><input type="email" id="signup-email" placeholder="University Email ID" required class="w-full p-3 rounded-lg border dark:bg-slate-800 dark:border-slate-700"></div>
+                           <div class="input-group"><input type="password" id="signup-password" placeholder="Password" required class="w-full p-3 rounded-lg border dark:bg-slate-800 dark:border-slate-700"></div>
+                           <div><select id="signup-university" required class="w-full p-3 rounded-lg border dark:bg-slate-800 dark:border-slate-700 text-gray-500"><option value="Chitkara University">Chitkara University</option></select></div>
+                           <div class="grid grid-cols-2 gap-4">
+                               <div class="input-group"><input type="text" id="signup-rollno" placeholder="Roll Number" required class="w-full p-3 rounded-lg border dark:bg-slate-800 dark:border-slate-700"></div>
+                               <div class="input-group"><input type="text" id="signup-department" placeholder="Department" required class="w-full p-3 rounded-lg border dark:bg-slate-800 dark:border-slate-700"></div>
+                           </div>
+                           <input type="hidden" id="signup-role" value="student">
+                           <button type="submit" class="w-full bg-indigo-600 text-white p-3 rounded-lg text-lg font-bold">Sign Up</button>
+                         <div class="relative flex py-5 items-center">
+                           <div class="flex-grow border-t border-gray-400"></div>
+                          <span class="flex-shrink mx-4 text-gray-400">Or</span>
+                          <div class="flex-grow border-t border-gray-400"></div>
+              </div>
+
+                           <button type="button" id="google-signin-btn" class="w-full flex items-center justify-center bg-white text-gray-700 p-3 rounded-lg font-semibold border border-gray-300 hover:bg-gray-50">
+                            <img class="w-6 h-6 mr-3" src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google logo">
+                     Continue with Google
+             </button>
+
+
+
+
+
+                           <p class="text-center text-sm text-gray-600 dark:text-gray-400">Already have an account? <a href="login.html" class="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">Log In</a></p>
+                        </form>
+                    </div>
+                    <div class="signup-image-panel hidden md:block"></div>
+                </div>
+            </div>
+       </div>
+    </main>
+    
+    <script type="module" src="/js/script.js" defer></script>
+    <script type="module" src="/js/signup.js" defer></script>
+</body>
+</html>

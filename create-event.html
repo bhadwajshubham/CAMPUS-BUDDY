@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect Pro - Create Event</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-200">
+
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="text-3xl font-bold bg-clip-text text-transparent cursor-pointer holographic-effect">
+                    🚀 CampusConnect Pro
+                </a>
+                <div class="flex items-center space-x-6">
+                    <a href="dashboard.html" class="nav-link text-gray-900 dark:text-gray-100 font-medium">Dashboard</a>
+                    <button id="theme-toggle" class="p-3 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-8">Create a New Event</h1>
+            
+            <div class="bg-white dark:bg-card-dark p-6 sm:p-8 rounded-2xl shadow-lg">
+               <form id="create-event-form" class="space-y-6">
+    <div>
+        <label class="font-semibold" for="event-name">Event Name</label>
+        <input type="text" id="event-name" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+    </div>
+
+    <div>
+        <label class="font-semibold" for="event-image">Event Banner Image URL</label>
+        <input type="text" id="event-image" placeholder="Paste a public Google Drive or image link here" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+        <div>
+            <label class="font-semibold" for="event-date">Date</label>
+            <input type="date" id="event-date" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+        </div>
+        <div>
+            <label class="font-semibold" for="event-time">Time</label>
+            <input type="time" id="event-time" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+        <div>
+            <label class="font-semibold" for="event-location">Location</label>
+            <input type="text" id="event-location" placeholder="e.g., University Auditorium" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+        </div>
+         <div>
+            <label class="font-semibold" for="event-category">Category</label>
+            <select id="event-category" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                <option value="Tech">Tech</option>
+                <option value="Arts & Culture">Arts & Culture</option>
+                <option value="Sports">Sports</option>
+                <option value="Workshop">Workshop</option>
+            </select>
+        </div>
+    </div>
+
+    <div>
+        <label class="font-semibold" for="event-description">Description</label>
+        <textarea id="event-description" rows="4" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
+    </div>
+
+    <div class="pt-6 text-right">
+        <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold text-lg">
+           <i class="fa-solid fa-rocket mr-2"></i>Publish Event
+        </button>
+    </div>
+</form>
+            </div>
+        </div>
+    </main>
+    
+    <script type="module" src="/js/script.js" defer></script>
+    <script type="module" src="/js/create-event.js" defer></script>
+</body>
+</html>
