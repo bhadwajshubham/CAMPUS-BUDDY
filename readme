@@ -1,0 +1,21 @@
+# 🚀 CampusConnect Pro
+
+Welcome to CampusConnect Pro, a comprehensive management system for university events. This platform allows students to discover and register for events, while enabling organizers to manage them seamlessly.
+
+## ✨ Features
+
+- **Student Portal:** Browse events, register with one click, and view upcoming event tickets (QR codes).
+- **Organizer Panel:** Create, edit, and delete events. View attendee lists and take attendance using a QR code scanner.
+- **Admin Dashboard:** Full oversight of all users, events, and universities on the platform.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** HTML, CSS, JavaScript
+- **Styling:** Tailwind CSS
+- **Backend:** Netlify Functions
+- **Database:** Google Firestore
+- **Authentication:** Firebase Authentication
+
+## 🚀 Live Demo
+
+You can view the live deployed version of the project here: [https://campusbro.netlify.app/](https://campusbro.netlify.app/)
