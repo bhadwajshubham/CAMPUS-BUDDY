@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"  # or "" if you're not using a build step
+  publish = "."
+
+[build.environment]
+  SECRETS_SCAN_OMIT_PATHS = "js/firebase-config.js"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["nodemailer"]
