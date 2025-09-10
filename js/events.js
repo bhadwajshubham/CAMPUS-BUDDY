@@ -4,27 +4,23 @@ import { collection, getDocs, addDoc, query, where, doc, getDoc } from "https://
 
 const eventsGrid = document.getElementById('events-grid');
 let currentUser = null;
-let userProfile = null; // To store user data from Firestore
+let userProfile = null;
 let userRegistrations = [];
 
 // =======================================================
-// ==      1. MAIN AUTHENTICATION LISTENER              ==
+// ==      1. AUTHENTICATION & PROFILE FETCHER          ==
 // =======================================================
 onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     if (user) {
-        // If a user is logged in, fetch their Firestore profile and registrations
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
         userProfile = userSnap.exists() ? userSnap.data() : null;
-        
         await fetchUserRegistrations(user.uid);
     } else {
-        // If no user, clear the data
         userProfile = null;
         userRegistrations = [];
     }
-    // Now, display events based on the user's state.
     fetchAndDisplayEvents();
 });
 
@@ -36,27 +32,22 @@ const fetchUserRegistrations = async (userId) => {
     try {
         const regQuery = query(collection(db, "registrations"), where("userId", "==", userId));
         const regSnap = await getDocs(regQuery);
-        // Store the IDs of events the user is registered for
         userRegistrations = regSnap.docs.map(doc => doc.data().eventId);
     } catch (error) {
         console.error("Error fetching user registrations:", error);
     }
 };
 
-const sendConfirmationEmail = async (user, eventId, eventData) => {
-    console.log("Asking our server to send the confirmation email for event:", eventData.name);
+const sendConfirmationEmail = async (user, eventData) => {
+    // The URL MUST be a relative path to avoid mixed-content errors on the live site.
+    const functionUrl = '/.netlify/functions/send-email';
+
     try {
-        // This function now securely calls YOUR backend server
-       const response = await fetch('http://localhost:3000/api/send-email', { // Make sure this endpoint exists in your server.js
+        const response = await fetch(functionUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 to: user.email,
-                displayName: user.displayName || 'Student',
-                eventId: eventId,
-                userId: user.uid,
                 eventName: eventData.name,
                 eventDate: new Date(eventData.date.seconds * 1000).toLocaleDateString(),
                 eventLocation: eventData.location
@@ -64,7 +55,7 @@ const sendConfirmationEmail = async (user, eventId, eventData) => {
         });
 
         if (!response.ok) {
-            throw new Error("Server responded with an error.");
+            throw new Error('Server responded with an error.');
         }
         
         console.log("Request to send email was successful.");
@@ -83,13 +74,9 @@ const fetchAndDisplayEvents = async () => {
 
     try {
         let eventsQuery;
-        // CORRECTED LOGIC: Check the user's role from their Firestore profile
         if (currentUser && userProfile && userProfile.role === 'student' && userProfile.university) {
-            console.log(`Filtering events for university: ${userProfile.university}`);
             eventsQuery = query(collection(db, "events"), where("university", "==", userProfile.university));
         } else {
-            // If organizer, not logged in, or student without a university, show all events
-            console.log("Showing all events.");
             eventsQuery = query(collection(db, "events"));
         }
 
@@ -100,7 +87,6 @@ const fetchAndDisplayEvents = async () => {
             return;
         }
 
-        // PERFORMANCE FIX: Build an array of HTML strings first
         const eventCardsHTML = eventsSnap.docs.map(doc => {
             const event = doc.data();
             const eventId = doc.id;
@@ -124,14 +110,13 @@ const fetchAndDisplayEvents = async () => {
                     </button>
                 </div>
             `;
-        });
+        }).join('');
 
-        // Set innerHTML only ONCE for better performance
-        eventsGrid.innerHTML = eventCardsHTML.join('');
+        eventsGrid.innerHTML = eventCardsHTML;
 
     } catch (error) {
         console.error("Error fetching events:", error);
-        eventsGrid.innerHTML = '<p class="text-center col-span-full text-red-500">Could not load events. Please try again later.</p>';
+        eventsGrid.innerHTML = '<p class="text-center col-span-full text-red-500">Could not load events.</p>';
     }
 };
 
@@ -145,7 +130,6 @@ eventsGrid.addEventListener('click', async (e) => {
     const eventId = registerButton.dataset.eventId;
 
     if (!currentUser) {
-        console.log("User not logged in. Redirecting to login page.");
         window.location.href = 'login.html';
         return;
     }
@@ -154,29 +138,30 @@ eventsGrid.addEventListener('click', async (e) => {
     registerButton.textContent = 'Registering...';
 
     try {
+        // Step 1: Save the registration to Firestore
         await addDoc(collection(db, "registrations"), {
             userId: currentUser.uid,
             eventId: eventId,
             timestamp: new Date()
         });
 
-        userRegistrations.push(eventId);
+        // Step 2: After a successful registration, get the event data...
+        const eventRef = doc(db, "events", eventId);
+        const eventSnap = await getDoc(eventRef);
         
+        // Step 3: ...and then call the email function with that data.
+        if (eventSnap.exists()) {
+            sendConfirmationEmail(currentUser, eventSnap.data());
+        }
+
+        // Update the button UI on success
         registerButton.textContent = 'Registered ✓';
         registerButton.classList.remove('bg-indigo-600');
         registerButton.classList.add('bg-green-600');
         
-        console.log("Registration successful! A confirmation email is being sent.");
-        
-        const eventRef = doc(db, "events", eventId);
-        const eventSnap = await getDoc(eventRef);
-        if (eventSnap.exists()) {
-            sendConfirmationEmail(currentUser, eventId, eventSnap.data());
-        }
-
     } catch (error) {
         console.error("Error during registration:", error);
         registerButton.disabled = false;
         registerButton.textContent = 'Register Now';
     }
-})
+});
