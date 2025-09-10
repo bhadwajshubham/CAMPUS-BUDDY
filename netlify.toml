@@ -1,6 +1,6 @@
 [build]
-  command = ""          # No build step required
-  publish = "."         # Your root folder
+  command = "npm run build"  # or "" if you're not using a build step
+  publish = "."
 
 [build.environment]
   SECRETS_SCAN_OMIT_PATHS = "js/firebase-config.js"
