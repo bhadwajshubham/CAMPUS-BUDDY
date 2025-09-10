@@ -1,18 +1,27 @@
 {
   "name": "campus-connect-pro",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A comprehensive platform for managing and discovering campus events.",
+  "main": "script.js",
   "scripts": {
-    "build": "tailwindcss -i ./css/input.css -o ./css/style.css --minify"
+    "build": "node generate-config.js && tailwindcss -i ./css/input.css -o ./css/style.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "tailwindcss": "^3.4.17"
-  },
+  "keywords": [
+    "events",
+    "campus",
+    "students",
+    "firebase"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
   "dependencies": {
-    "nodemailer": "^6.10.1"
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.1.1",
+    "nodemailer": "^6.9.13"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
   }
 }
