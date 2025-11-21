@@ -1,88 +1,152 @@
-<!DOCTYPE html>
-<html lang="en" class="">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusConnect Pro - Create Event</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Organizer Studio — Create Event</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <style>
+    .form-container { max-width: 600px; margin: 40px auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 40px; box-shadow: var(--shadow-card); }
+    .form-input, .form-textarea, select { width: 100%; background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px; color: white; outline: none; margin-bottom: 20px; }
+    .form-input:focus { border-color: var(--primary); }
+    .error-msg { color: #ef4444; font-size: 0.9rem; margin-top: -15px; margin-bottom: 15px; display: none; }
+  </style>
 </head>
-<body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-200">
+<body id="create-event-page">
 
-    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <a href="index.html" class="text-3xl font-bold bg-clip-text text-transparent cursor-pointer holographic-effect">
-                    🚀 CampusConnect Pro
-                </a>
-                <div class="flex items-center space-x-6">
-                    <a href="dashboard.html" class="nav-link text-gray-900 dark:text-gray-100 font-medium">Dashboard</a>
-                    <button id="theme-toggle" class="p-3 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"></button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="pt-24 pb-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl md:text-5xl font-bold mb-8">Create a New Event</h1>
-            
-            <div class="bg-white dark:bg-card-dark p-6 sm:p-8 rounded-2xl shadow-lg">
-               <form id="create-event-form" class="space-y-6">
-    <div>
-        <label class="font-semibold" for="event-name">Event Name</label>
-        <input type="text" id="event-name" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-area">
+        <a href="/dashboard.html" class="logo-link"><div class="brand-mark">CB</div></a>
+        <span style="color:white; font-weight:600;">Organizer Studio</span>
+      </div>
     </div>
+  </header>
 
-    <div>
-        <label class="font-semibold" for="event-image">Event Banner Image URL</label>
-        <input type="text" id="event-image" placeholder="Paste a public Google Drive or image link here" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
-    </div>
+  <main class="dashboard-layout" style="display:block; overflow-y:auto;"> 
+    <div class="content-area">
+        <a href="/dashboard.html" style="color:var(--text-muted); display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+            <i class="ri-arrow-left-line"></i> Back
+        </a>
 
-    <div class="grid md:grid-cols-2 gap-6">
-        <div>
-            <label class="font-semibold" for="event-date">Date</label>
-            <input type="date" id="event-date" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
-        </div>
-        <div>
-            <label class="font-semibold" for="event-time">Time</label>
-            <input type="time" id="event-time" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
-        </div>
-    </div>
+        <div class="form-container">
+            <h2 style="font-family:'Playfair Display', serif;">Create New Event</h2>
+            <p style="color:var(--text-muted); margin-bottom:30px;">Book a venue and publish your event.</p>
 
-    <div class="grid md:grid-cols-2 gap-6">
-        <div>
-            <label class="font-semibold" for="event-location">Location</label>
-            <input type="text" id="event-location" placeholder="e.g., University Auditorium" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
-        </div>
-         <div>
-            <label class="font-semibold" for="event-category">Category</label>
-            <select id="event-category" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
-                <option value="Tech">Tech</option>
-                <option value="Arts & Culture">Arts & Culture</option>
-                <option value="Sports">Sports</option>
-                <option value="Workshop">Workshop</option>
-            </select>
+            <form id="createEventForm">
+                <label style="color:var(--text-muted); font-size:0.85rem;">Event Name</label>
+                <input type="text" id="eventName" class="form-input" placeholder="e.g. Hackathon 2025" required>
+
+                <label style="color:var(--text-muted); font-size:0.85rem;">Date & Time</label>
+                <input type="datetime-local" id="eventDate" class="form-input" required>
+
+                <label style="color:var(--text-muted); font-size:0.85rem;">Select Venue</label>
+                <select id="eventLocation" class="form-input" required>
+                    <option value="" disabled selected>Select Block/Hall</option>
+                    <option value="Rockefeller Block - Auditorium">Rockefeller Block - Auditorium</option>
+                    <option value="Edison Block - Hall A">Edison Block - Hall A</option>
+                    <option value="Newton Block - Seminar Hall">Newton Block - Seminar Hall</option>
+                    <option value="Turing Block - Labs">Turing Block - Labs</option>
+                    <option value="Sport Complex">Sport Complex</option>
+                </select>
+                <div id="venueError" class="error-msg"><i class="ri-error-warning-line"></i> This venue is already booked for this date!</div>
+
+                <label style="color:var(--text-muted); font-size:0.85rem;">Description</label>
+                <textarea id="eventDesc" class="form-textarea" rows="4" placeholder="Event details..."></textarea>
+                
+                <label style="color:var(--text-muted); font-size:0.85rem;">Restricted Departments (Optional)</label>
+                <input type="text" id="eventDepts" class="form-input" placeholder="e.g. CSE, ECE (Leave empty for Open to All)">
+
+                <button type="submit" class="btn primary" style="width:100%; padding:14px;">Publish Event</button>
+            </form>
         </div>
     </div>
+  </main>
 
-    <div>
-        <label class="font-semibold" for="event-description">Description</label>
-        <textarea id="event-description" rows="4" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
-    </div>
+  <script type="module">
+    import { auth, db } from './js/firebase-config.js';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { collection, addDoc, Timestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <div class="pt-6 text-right">
-        <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold text-lg">
-           <i class="fa-solid fa-rocket mr-2"></i>Publish Event
-        </button>
-    </div>
-</form>
-            </div>
-        </div>
-    </main>
+    const form = document.getElementById('createEventForm');
     
-    <script type="module" src="/js/script.js" defer></script>
-    <script type="module" src="/js/create-event.js" defer></script>
+    onAuthStateChanged(auth, (user) => {
+        if (!user) window.location.href = 'login.html';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button');
+            const errorMsg = document.getElementById('venueError');
+            
+            btn.innerHTML = 'Checking Venue...';
+            btn.disabled = true;
+            errorMsg.style.display = 'none';
+
+            const name = document.getElementById('eventName').value;
+            const dateVal = document.getElementById('eventDate').value; // String: "2025-10-20T10:00"
+            const location = document.getElementById('eventLocation').value;
+            const desc = document.getElementById('eventDesc').value;
+            const deptInput = document.getElementById('eventDepts').value;
+
+            // Parse Date for Comparison (Simple Date Check)
+            // NOTE: For a real production app, you need robust time-range overlapping logic.
+            // For this MVP, we check if the venue is booked on the SAME DAY.
+            const selectedDate = new Date(dateVal);
+            const startOfDay = new Date(selectedDate); startOfDay.setHours(0,0,0,0);
+            const endOfDay = new Date(selectedDate); endOfDay.setHours(23,59,59,999);
+
+            try {
+                // 1. VENUE CONFLICT CHECK
+                const q = query(
+                    collection(db, "events"), 
+                    where("location", "==", location),
+                    where("date", ">=", Timestamp.fromDate(startOfDay)),
+                    where("date", "<=", Timestamp.fromDate(endOfDay))
+                );
+                
+                const conflictSnap = await getDocs(q);
+                
+                if (!conflictSnap.empty) {
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerHTML = `<i class="ri-error-warning-line"></i> Conflict! "${conflictSnap.docs[0].data().name}" is already booked here on this date.`;
+                    btn.innerHTML = 'Publish Event';
+                    btn.disabled = false;
+                    return; // STOP
+                }
+
+                // 2. SAVE EVENT
+                btn.innerHTML = 'Publishing...';
+                
+                // Parse Departments string to array
+                let restrictedBranches = [];
+                if(deptInput.trim() !== "") {
+                    restrictedBranches = deptInput.split(',').map(s => s.trim().toUpperCase());
+                }
+
+                await addDoc(collection(db, "events"), {
+                    name: name,
+                    date: Timestamp.fromDate(selectedDate),
+                    location: location,
+                    description: desc,
+                    restrictedBranches: restrictedBranches, // For Eligibility Logic
+                    organizerId: user.uid,
+                    createdAt: Timestamp.now()
+                });
+
+                alert("Event Created Successfully!");
+                window.location.href = 'dashboard.html';
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error: " + error.message);
+                btn.innerHTML = 'Publish Event';
+                btn.disabled = false;
+            }
+        });
+    });
+  </script>
 </body>
 </html>

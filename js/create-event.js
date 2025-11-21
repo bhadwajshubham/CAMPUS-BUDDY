@@ -1,65 +1,73 @@
-// js/create-event.js
 
-import { auth, db } from './firebase-config.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { collection, addDoc, Timestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const api = {
+    baseUrl: '/api/dashboard',
+    async post(endpoint, data) {
+        const response = await fetch(this.baseUrl + endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return await response.json();
+    }
+};
 
 const eventForm = document.getElementById('create-event-form');
+const submitButton = document.getElementById('submit-button');
 
-onAuthStateChanged(auth, async (user) => {
-    if (user && eventForm) {
-        // Fetch the organizer's profile to get their university
-        const userDocRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userDocRef);
+// A reusable notification function (like in dashboard.js)
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    const colors = {
+        success: 'var(--plasma-gradient)',
+        error: 'linear-gradient(135deg, #FF006E, #DC2626)',
+        info: 'var(--aurora-gradient)'
+    };
+    notification.style.cssText = `position: fixed; top: 20px; right: 20px; background: ${colors[type]}; color: var(--pure-white); padding: 1rem 1.5rem; border-radius: 16px; box-shadow: var(--shadow-deep); z-index: 10001; font-weight: 600; transform: translateX(120%); transition: transform 0.3s var(--ease-cyber);`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    requestAnimationFrame(() => {
+        notification.style.transform = 'translateX(0)';
+    });
+    setTimeout(() => {
+        notification.style.transform = 'translateX(120%)';
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
+}
 
-        if (!userDoc.exists() || (userDoc.data().role !== 'organizer' && userDoc.data().role !== 'superAdmin')) {
-            alert("You do not have permission to create events.");
-            window.location.href = 'dashboard.html';
-            return;
-        }
+eventForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitButton.disabled = true;
+    submitButton.innerHTML = 'Publishing...';
 
-        const organizerData = userDoc.data();
-        const organizerUniversity = organizerData.university; 
+    const eventName = document.getElementById('event-name').value;
+    const eventImage = document.getElementById('event-image').value;
+    const eventDate = document.getElementById('event-date').value;
+    const eventTime = document.getElementById('event-time').value;
+    const eventLocation = document.getElementById('event-location').value;
+    const eventCategory = document.getElementById('event-category').value;
+    const eventDescription = document.getElementById('event-description').value;
+    
+    const eventDateTime = new Date(`${eventDate}T${eventTime}`);
 
-        eventForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            // Get all form values, including the new image URL
-            const eventName = document.getElementById('event-name').value;
-            const eventImage = document.getElementById('event-image').value; // NEW: Get the banner image URL
-            const eventDate = document.getElementById('event-date').value;
-            const eventTime = document.getElementById('event-time').value;
-            const eventLocation = document.getElementById('event-location').value;
-            const eventCategory = document.getElementById('event-category').value;
-            const eventDescription = document.getElementById('event-description').value;
-            
-            const eventDateTime = new Date(`${eventDate}T${eventTime}`);
-
-            try {
-                // Add the new event to the 'events' collection
-                await addDoc(collection(db, "events"), {
-                    name: eventName,
-                    imageUrl: eventImage, // NEW: Save the image URL
-                    date: Timestamp.fromDate(eventDateTime),
-                    location: eventLocation,
-                    university: organizerUniversity,
-                    category: eventCategory,
-                    description: eventDescription,
-                    organizerId: user.uid,
-                    createdAt: Timestamp.now()
-                });
-                
-                alert('Event created successfully!');
-                window.location.href = 'dashboard.html';
-
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                alert(`Error: ${error.message}`);
-            }
+    try {
+        await api.post('/events', {
+            title: eventName,
+            imageUrl: eventImage,
+            date: eventDateTime.toISOString(),
+            location: eventLocation,
+            category: eventCategory,
+            description: eventDescription,
+            status: 'Upcoming' // Set initial status
         });
+        
+        showNotification('Event created successfully!', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1500);
 
-    } else if (!user) {
-        alert("You must be logged in to create an event.");
-        window.location.href = 'login.html';
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        showNotification(`Error: ${error.message}`, 'error');
+        submitButton.disabled = false;
+        submitButton.innerHTML = '🚀 Publish Event';
     }
 });

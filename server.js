@@ -2,8 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const nodemailer = require('nodemailer');
 const path = require('path');
-const cors = require('cors'); // ADD THIS LINE
-
+const cors = require('cors');
+const dashboardApi = require('./dashboard-api');
 
 const app = express();
 
@@ -11,7 +11,10 @@ app.use(cors());
 // Middleware to parse JSON bodies and serve static files
 app.use(express.json());
 // This line tells the server to serve all your HTML, CSS, and client-side JS files
-app.use(express.static(path.join(__dirname))); 
+app.use(express.static(path.join(__dirname)));
+
+// Use the dashboard API
+app.use('/api/dashboard', dashboardApi);
 
 // Nodemailer transporter setup using your .env credentials
 const transporter = nodemailer.createTransport({

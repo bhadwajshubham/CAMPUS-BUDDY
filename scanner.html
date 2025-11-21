@@ -1,41 +1,49 @@
-<!DOCTYPE html>
-<html lang="en" class="">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusConnect Pro - QR Scanner</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-</head>
-<body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-200">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Campus-Buddy — Live Scanner</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
-    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <a href="index.html" class="text-3xl font-bold bg-clip-text text-transparent cursor-pointer holographic-effect">
-                    🚀 CampusConnect Pro
-                </a>
-                <a href="dashboard.html" class="nav-link text-gray-900 dark:text-gray-100 font-medium">Dashboard</a>
-            </div>
-        </div>
-    </nav>
+  <link rel="stylesheet" href="/css/variable.css"> <link rel="stylesheet" href="/css/scanner.css">   </head>
+<body>
 
-    <main class="pt-24 pb-16">
-        <div class="max-w-xl mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-8">Event Check-in Scanner</h1>
-            
-            <div id="qr-reader" class="w-full border-4 border-gray-300 dark:border-slate-700 rounded-2xl overflow-hidden"></div>
-            
-            <div id="qr-reader-result" class="mt-6 p-6 rounded-2xl bg-white dark:bg-card-dark shadow-lg text-2xl font-bold">
-                Point camera at a QR code...
-            </div>
-        </div>
-    </main>
-    
-    <script type="module" src="/js/script.js" defer></script>
-    <script type="module" src="/js/scanner.js" defer></script>
+  <div id="flash-overlay" class="flash-hidden">
+      <i class="ri-checkbox-circle-fill flash-icon" id="flash-icon"></i>
+      <div class="flash-text" id="flash-msg">Verified</div>
+  </div>
+
+  <div class="scanner-layout">
+      
+      <div class="camera-container">
+          <div class="camera-header">
+              <a href="/dashboard.html" class="back-btn" aria-label="Back">
+                  <i class="ri-arrow-left-line"></i>
+              </a>
+              <div id="eventName" class="event-badge">Loading Event...</div>
+              <div class="spacer"></div>
+          </div>
+          <div id="reader"></div>
+      </div>
+
+      <div class="feed-container">
+          <div class="feed-header">
+              <h4>Live Entry Feed</h4>
+              <span id="scan-count" class="count-badge">0 Scanned</span>
+          </div>
+          
+          <div id="feed-list" class="feed-scroll-area">
+              <div class="empty-state">
+                  <i class="ri-qr-scan-2-line"></i>
+                  <p>Ready to scan tickets...</p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script type="module" src="/js/scanner.js"></script>
 </body>
 </html>

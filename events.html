@@ -4,47 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusConnect Pro - Events</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-      }
-    </script>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/events.css">
 </head>
 <body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-200">
 
-<nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
-            <a href="index.html" class="text-3xl font-bold bg-clip-text text-transparent cursor-pointer holographic-effect">
-                🚀 CampusConnect Pro
-            </a>
-            
-            <div id="nav-desktop" class="hidden md:flex items-center space-x-6">
-                <a href="index.html" class="nav-link text-gray-900 dark:text-gray-100 font-medium">Home</a>
-                <a href="events.html" class="nav-link text-gray-900 dark:text-gray-100 font-medium">Events</a>
-                <a href="login.html" id="login-btn-nav" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors font-semibold">
-                    <i class="fa-solid fa-lock mr-2"></i>Login
-                </a>
-                <button id="theme-toggle" class="p-3 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"></button>
-            </div>
-
-            <div class="md:hidden flex items-center">
-                <button id="theme-toggle-mobile" class="p-3 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"></button>
-                <button id="mobile-menu-btn" class="text-gray-900 dark:text-gray-100 p-2"><svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
-            </div>
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">CampusConnect</div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-link"><span>Home</span></a>
+            <a href="events.html" class="nav-link"><span>Events</span></a>
+            <a href="login.html" id="login-btn-nav" class="nav-link"><span>Login</span></a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i> Theme
+            </button>
         </div>
     </div>
-    </nav>
+</nav>
 
-    <main class="pt-20">
-    <section class="py-16 text-center gradient-bg">
-        <div class="max-w-4xl mx-auto px-4">
-            <h1 class="text-5xl md:text-6xl font-bold text-white">Find Your Next Experience</h1>
-            <p class="text-xl text-indigo-100 mt-4 max-w-2xl mx-auto">From workshops that build your skills to festivals that celebrate culture, your next great memory is here.</p>
+<main class="pt-20">
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <i class="fas fa-sparkles"></i>
+                    Find Your Next Experience
+                </div>
+                <h1>Discover <span class="highlight">Events</span></h1>
+                <p class="hero-subtitle">From workshops that build your skills to festivals that celebrate culture, your next great memory is here.</p>
+            </div>
         </div>
     </section>
 
@@ -63,28 +53,72 @@
         </div>
 
         <div id="events-grid" class="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            </div>
+            <!-- Events will be populated by events.js -->
+        </div>
     </div>
 </main>  
-    <footer class="bg-dark-bg text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-           <div class="text-3xl font-bold mb-6 holographic-effect bg-clip-text text-transparent">🚀 CampusConnect Pro</div>
-           <div class="flex justify-center space-x-6 mb-8">
-               <a href="#" class="text-gray-400 hover:text-white">About</a>
-               <a href="#" class="text-gray-400 hover:text-white">Contact</a>
-               <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
-           </div>
-            <div class="flex justify-center space-x-6 mb-8 text-2xl">
-               <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-               <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
-               <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
-           </div>
-           <p class="text-gray-500">&copy; 2025 CampusConnect Pro. All rights reserved.</p>
-       </div>
-    </footer>
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">CampusConnect</div>
+                <p>Pioneering the future of education through intelligent technology, meaningful connections, and transformative experiences. Join the revolution that's reshaping how the world learns and grows.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
 
-<script type="module" src="/script.js"></script>
-<script type="module" src="/firebase-config.js"></script>
-<script type="module" src="/login.js"></script>
+            <div class="footer-section">
+                <h3>Platform</h3>
+                <ul>
+                    <li><a href="#">AI Features</a></li>
+                    <li><a href="#">Blockchain Verification</a></li>
+                    <li><a href="#">Analytics Dashboard</a></li>
+                    <li><a href="#">API Documentation</a></li>
+                    <li><a href="#">Enterprise Solutions</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">24/7 Support</a></li>
+                    <li><a href="#">Community Forum</a></li>
+                    <li><a href="#">System Status</a></li>
+                    <li><a href="#">Security Center</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press Kit</a></li>
+                    <li><a href="#">Investor Relations</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 CampusConnect. Crafted with ❤️ in India. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">Accessibility</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script type="module" src="js/events.js"></script>
 </body>
 </html>

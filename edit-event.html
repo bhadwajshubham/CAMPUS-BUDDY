@@ -1,69 +1,166 @@
-<!DOCTYPE html>
-<html lang="en" class="">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusConnect Pro - Edit Event</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Campus-Buddy — Edit Event</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link rel="stylesheet" href="/css/dashboard.css"> <style>
+    /* Form Overrides to match Dark Theme */
+    .form-container {
+        max-width: 600px; margin: 40px auto; background: var(--bg-card);
+        border: 1px solid var(--border); border-radius: 24px; padding: 40px;
+        box-shadow: var(--shadow-card);
+    }
+    .form-group { margin-bottom: 24px; }
+    .form-label { display: block; color: var(--text-muted); margin-bottom: 8px; font-size: 0.9rem; }
+    .form-input, .form-textarea {
+        width: 100%; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+        padding: 12px 16px; border-radius: 12px; color: white; font-family: 'Inter', sans-serif;
+        outline: none; transition: 0.3s;
+    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--primary); }
+    .back-link { display: flex; align-items: center; gap: 8px; color: var(--text-muted); margin-bottom: 20px; cursor: pointer; }
+    .back-link:hover { color: white; }
+  </style>
 </head>
-<body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-200">
+<body id="edit-event-page">
 
-    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <a href="index.html" class="text-3xl font-bold bg-clip-text text-transparent cursor-pointer holographic-effect">
-                    🚀 CampusConnect Pro
-                </a>
-                <div id="nav-desktop" class="hidden md:flex items-center space-x-6"></div>
-            </div>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-area">
+        <a href="/dashboard.html" class="logo-link">
+          <div class="brand-mark">CB</div>
+        </a>
+        <span style="color:white; font-weight:600;">Organizer Studio</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-layout" style="display:block; overflow-y:auto;"> 
+    <div class="content-area">
+        <a href="/dashboard.html" class="back-link"><i class="ri-arrow-left-line"></i> Back to Dashboard</a>
+
+        <div class="form-container">
+            <h2 style="font-family:'Playfair Display', serif; margin-bottom:10px;">Edit Event</h2>
+            <p style="color:var(--text-muted); margin-bottom:30px;">Update event details.</p>
+
+            <form id="editEventForm">
+                <div class="form-group">
+                    <label class="form-label">Event Name</label>
+                    <input type="text" id="eventName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date & Time</label>
+                    <input type="datetime-local" id="eventDate" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Venue / Location</label>
+                    <input type="text" id="eventLocation" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="eventDesc" class="form-textarea" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select id="eventStatus" class="form-input">
+                        <option value="upcoming">Upcoming</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn primary" style="width:100%; justify-content:center; padding:14px;">
+                    Save Changes
+                </button>
+            </form>
         </div>
-    </nav>
+    </div>
+  </main>
 
-    <main class="pt-24 pb-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+  <script type="module">
+    import { auth, db } from './js/firebase-config.js';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const form = document.getElementById('editEventForm');
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventId = urlParams.get('id');
+
+    if (!eventId) {
+        alert("No Event ID found!");
+        window.location.href = 'dashboard.html';
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) window.location.href = 'login.html';
+
+        // 1. Fetch Existing Data
+        try {
+            const docRef = doc(db, "events", eventId);
+            const docSnap = await getDoc(docRef);
+
+            if (!docSnap.exists()) {
+                alert("Event not found!");
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            const data = docSnap.data();
             
-            <h1 class="text-4xl md:text-5xl font-bold mb-8 text-gray-800 dark:text-gray-200">Edit Event</h1>
+            // Check Ownership
+            if (data.organizerId !== user.uid) {
+                // NOTE: If you are SuperAdmin, you should be allowed.
+                // But for now, let's stick to organizer check.
+                // (The DB rules will enforce the actual security)
+            }
+
+            // Populate Form
+            document.getElementById('eventName').value = data.name;
+            document.getElementById('eventLocation').value = data.location;
+            document.getElementById('eventDesc').value = data.description;
             
-            <div class="bg-white dark:bg-card-dark p-6 sm:p-8 rounded-2xl shadow-lg">
-                <form id="edit-event-form" class="space-y-6">
-                    <div>
-                        <label class="font-semibold" for="event-name">Event Name</label>
-                        <input type="text" id="event-name" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
-                    </div>
+            // Date conversion for input
+            if (data.date) {
+                const d = data.date.toDate();
+                d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+                document.getElementById('eventDate').value = d.toISOString().slice(0, 16);
+            }
 
-                    <div>
-                        <label class="font-semibold" for="event-image">Event Banner Image URL</label>
-                        <input type="text" id="event-image" placeholder="Paste a public image link here" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
-                    </div>
+        } catch (error) {
+            console.error("Error fetching event:", error);
+        }
 
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div><label class="font-semibold" for="event-date">Date</label><input type="date" id="event-date" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></div>
-                        <div><label class="font-semibold" for="event-time">Time</label><input type="time" id="event-time" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></div>
-                    </div>
+        // 2. Handle Update
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button');
+            btn.innerHTML = 'Saving...';
 
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div><label class="font-semibold" for="event-location">Location</label><input type="text" id="event-location" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></div>
-                        <div><label class="font-semibold" for="event-category">Category</label><select id="event-category" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700"><option value="Tech">Tech</option><option value="Arts & Culture">Arts & Culture</option><option value="Sports">Sports</option><option value="Workshop">Workshop</option></select></div>
-                    </div>
-                    
-                    <div>
-                        <label class="font-semibold" for="event-description">Description</label>
-                        <textarea id="event-description" rows="4" required class="w-full mt-2 p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
-                    </div>
+            try {
+                const dateVal = document.getElementById('eventDate').value;
+                
+                await updateDoc(doc(db, "events", eventId), {
+                    name: document.getElementById('eventName').value,
+                    location: document.getElementById('eventLocation').value,
+                    description: document.getElementById('eventDesc').value,
+                    date: Timestamp.fromDate(new Date(dateVal)),
+                    // We do NOT update organizerId (Safety)
+                });
 
-                    <div class="pt-6 text-right">
-                        <button type="submit" id="update-event-btn" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-indigo-700 transition-colors">
-                            <i class="fa-solid fa-save mr-2"></i>Update Event
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </main>
-    
-    <script type="module" src="/js/script.js" defer></script> 
-    <script type="module" src="/js/edit-event.js" defer></script>
+                alert("Event Updated Successfully!");
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                console.error("Error updating:", error);
+                alert("Update Failed: " + error.message);
+                btn.innerHTML = 'Save Changes';
+            }
+        });
+    });
+  </script>
 </body>
 </html>

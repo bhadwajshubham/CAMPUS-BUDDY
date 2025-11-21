@@ -1,167 +1,59 @@
-import { auth, db } from './firebase-config.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { collection, getDocs, addDoc, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const mockEvents = [
+    { name: 'AI in Modern Business', category: 'Tech', date: '2024-10-20', time: '10:00 AM', location: 'Online', image: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=878&q=80' },
+    { name: 'Digital Art & NFT Workshop', category: 'Arts & Culture', date: '2024-11-05', time: '2:00 PM', location: 'Creative Hub', image: 'https://images.unsplash.com/photo-1607798748738-b15c40d339d9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80' },
+    { name: 'University Football Championship', category: 'Sports', date: '2024-11-12', time: '5:00 PM', location: 'Main Stadium', image: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80' },
+    { name: 'Quantum Computing Seminar', category: 'Tech', date: '2024-11-18', time: '11:00 AM', location: 'Physics Hall', image: 'https://images.unsplash.com/photo-1617802690992-09d349939311?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80' },
+    { name: 'Indie Film Festival', category: 'Arts & Culture', date: '2024-11-25', time: '7:00 PM', location: 'Indie Cinema', image: 'https://images.unsplash.com/photo-1519791883288-dc8bd696e667?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80' },
+    { name: 'Inter-College Basketball Tournament', category: 'Sports', date: '2024-12-02', time: '3:00 PM', location: 'Sports Complex', image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80' },
+];
 
 const eventsGrid = document.getElementById('events-grid');
-let currentUser = null;
-let userProfile = null;
-let userRegistrations = [];
+const searchBar = document.getElementById('search-bar');
+const filterButtons = document.querySelectorAll('.filter-btn');
 
-// =======================================================
-// ==      1. AUTHENTICATION & PROFILE FETCHER          ==
-// =======================================================
-onAuthStateChanged(auth, async (user) => {
-    currentUser = user;
-    if (user) {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-        userProfile = userSnap.exists() ? userSnap.data() : null;
-        await fetchUserRegistrations(user.uid);
-    } else {
-        userProfile = null;
-        userRegistrations = [];
-    }
-    fetchAndDisplayEvents();
-});
-
-// =======================================================
-// ==      2. HELPER FUNCTIONS                          ==
-// =======================================================
-
-const fetchUserRegistrations = async (userId) => {
-    try {
-        const regQuery = query(collection(db, "registrations"), where("userId", "==", userId));
-        const regSnap = await getDocs(regQuery);
-        userRegistrations = regSnap.docs.map(doc => doc.data().eventId);
-    } catch (error) {
-        console.error("Error fetching user registrations:", error);
-    }
-};
-
-const sendConfirmationEmail = async (user, eventData) => {
-    // The URL MUST be a relative path to avoid mixed-content errors on the live site.
-    const functionUrl = '/.netlify/functions/send-email';
-
-    try {
-        const response = await fetch(functionUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                to: user.email,
-                eventName: eventData.name,
-                eventDate: new Date(eventData.date.seconds * 1000).toLocaleDateString(),
-                eventLocation: eventData.location
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Server responded with an error.');
-        }
-        
-        console.log("Request to send email was successful.");
-
-    } catch (error) {
-        console.error("Error requesting email from server:", error);
-    }
-};
-
-// =======================================================
-// ==      3. MAIN FUNCTION TO DISPLAY EVENTS           ==
-// =======================================================
-const fetchAndDisplayEvents = async () => {
-    if (!eventsGrid) return;
-    eventsGrid.innerHTML = '<p class="text-center col-span-full">Loading events...</p>';
-
-    try {
-        let eventsQuery;
-        if (currentUser && userProfile && userProfile.role === 'student' && userProfile.university) {
-            eventsQuery = query(collection(db, "events"), where("university", "==", userProfile.university));
-        } else {
-            eventsQuery = query(collection(db, "events"));
-        }
-
-        const eventsSnap = await getDocs(eventsQuery);
-
-        if (eventsSnap.empty) {
-            eventsGrid.innerHTML = '<p class="text-center col-span-full">No events found. Check back soon!</p>';
-            return;
-        }
-
-        const eventCardsHTML = eventsSnap.docs.map(doc => {
-            const event = doc.data();
-            const eventId = doc.id;
-            const isRegistered = userRegistrations.includes(eventId);
-
-            return `
-                <div class="card-hover bg-card-light dark:bg-card-dark rounded-3xl p-6 shadow-lg flex flex-col">
-                    <h3 class="text-2xl font-bold mb-2">${event.name}</h3>
-                    <p class="text-indigo-500 dark:text-indigo-400 font-semibold mb-3">${event.category}</p>
-                    <p class="text-gray-600 dark:text-gray-300 mb-4 flex-grow">${event.description.substring(0, 100)}...</p>
-                    <div class="text-sm text-gray-500 mb-4">
-                        <p><i class="fa-solid fa-calendar-day w-5"></i> ${new Date(event.date.seconds * 1000).toLocaleDateString()}</p>
-                        <p><i class="fa-solid fa-location-dot w-5"></i> ${event.location}</p>
-                    </div>
-                    <button 
-                        class="register-btn w-full p-3 rounded-xl text-lg font-bold ${isRegistered ? 'bg-green-600' : 'bg-indigo-600'} text-white" 
-                        data-event-id="${eventId}"
-                        ${isRegistered ? 'disabled' : ''}
-                    >
-                        ${isRegistered ? 'Registered ✓' : 'Register Now'}
-                    </button>
+function displayEvents(events) {
+    eventsGrid.innerHTML = '';
+    events.forEach(event => {
+        const eventCard = document.createElement('div');
+        eventCard.className = 'event-card';
+        eventCard.innerHTML = `
+            <div class="event-image" style="background-image: url(${event.image})"></div>
+            <div class="event-content">
+                <div class="event-category">${event.category}</div>
+                <h3 class="event-name">${event.name}</h3>
+                <div class="event-details">
+                    <span><i class="fa-solid fa-calendar"></i> ${event.date}</span>
+                    <span><i class="fa-solid fa-clock"></i> ${event.time}</span>
+                    <span><i class="fa-solid fa-location-dot"></i> ${event.location}</span>
                 </div>
-            `;
-        }).join('');
+                <button class="register-btn">Register Now</button>
+            </div>
+        `;
+        eventsGrid.appendChild(eventCard);
+    });
+}
 
-        eventsGrid.innerHTML = eventCardsHTML;
+function filterEvents() {
+    const searchTerm = searchBar.value.toLowerCase();
+    const activeCategory = document.querySelector('.filter-btn.active').dataset.category;
 
-    } catch (error) {
-        console.error("Error fetching events:", error);
-        eventsGrid.innerHTML = '<p class="text-center col-span-full text-red-500">Could not load events.</p>';
-    }
-};
+    const filteredEvents = mockEvents.filter(event => {
+        const matchesCategory = activeCategory === 'All Events' || event.category === activeCategory;
+        const matchesSearch = event.name.toLowerCase().includes(searchTerm);
+        return matchesCategory && matchesSearch;
+    });
 
-// =======================================================
-// ==      4. REGISTRATION EVENT LISTENER               ==
-// =======================================================
-eventsGrid.addEventListener('click', async (e) => {
-    if (!e.target.classList.contains('register-btn')) return;
+    displayEvents(filteredEvents);
+}
 
-    const registerButton = e.target;
-    const eventId = registerButton.dataset.eventId;
+searchBar.addEventListener('input', filterEvents);
 
-    if (!currentUser) {
-        window.location.href = 'login.html';
-        return;
-    }
-
-    registerButton.disabled = true;
-    registerButton.textContent = 'Registering...';
-
-    try {
-        // Step 1: Save the registration to Firestore
-        await addDoc(collection(db, "registrations"), {
-            userId: currentUser.uid,
-            eventId: eventId,
-            timestamp: new Date()
-        });
-
-        // Step 2: After a successful registration, get the event data...
-        const eventRef = doc(db, "events", eventId);
-        const eventSnap = await getDoc(eventRef);
-        
-        // Step 3: ...and then call the email function with that data.
-        if (eventSnap.exists()) {
-            sendConfirmationEmail(currentUser, eventSnap.data());
-        }
-
-        // Update the button UI on success
-        registerButton.textContent = 'Registered ✓';
-        registerButton.classList.remove('bg-indigo-600');
-        registerButton.classList.add('bg-green-600');
-        
-    } catch (error) {
-        console.error("Error during registration:", error);
-        registerButton.disabled = false;
-        registerButton.textContent = 'Register Now';
-    }
+filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        filterEvents();
+    });
 });
+
+displayEvents(mockEvents);

@@ -1,0 +1,200 @@
+/* css/scanner.css */
+
+/* Base Settings */
+body {
+    background-color: #000000; /* Optimized for camera contrast */
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    overflow: hidden; /* Prevent scrolling on mobile */
+}
+
+.scanner-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+}
+
+/* --- Camera Viewport --- */
+.camera-container {
+    flex: 1;
+    position: relative;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#reader {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures camera fills screen */
+}
+
+/* Floating Header */
+.camera-header {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.back-btn {
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    width: 42px; 
+    height: 42px;
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+.back-btn:active { transform: scale(0.9); }
+
+.event-badge {
+    background: rgba(102, 126, 234, 0.9); /* Uses Brand Color */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.spacer { width: 42px; } /* Balances the flexbox header */
+
+/* --- Bottom Feed Sheet --- */
+.feed-container {
+    height: 45%; /* Occupies bottom 45% */
+    background: #151a23; /* Matches Dashboard Dark Theme */
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.feed-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.feed-header h4 { 
+    color: white; 
+    margin: 0; 
+    font-size: 1rem; 
+    font-weight: 600; 
+}
+
+.count-badge { 
+    background: rgba(255,255,255,0.05); 
+    color: #a855f7; /* Accent Purple */
+    padding: 6px 12px; 
+    border-radius: 12px; 
+    font-size: 0.8rem; 
+    font-weight: 700; 
+}
+
+.feed-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px;
+}
+
+/* Feed Items */
+.feed-item {
+    display: flex; 
+    align-items: center; 
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feed-avatar {
+    width: 40px; 
+    height: 40px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    color: white; 
+    font-weight: 800; 
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.feed-info { flex: 1; }
+.feed-name { color: white; font-weight: 600; font-size: 0.95rem; display: block; }
+.feed-roll { color: #94a3b8; font-size: 0.8rem; display: block; margin-top: 2px; }
+
+.feed-time {
+    font-size: 0.75rem; 
+    color: #64748b;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.empty-state {
+    text-align: center; 
+    padding: 60px 20px; 
+    color: #64748b;
+}
+.empty-state i { 
+    font-size: 2.5rem; 
+    display: block; 
+    margin-bottom: 16px; 
+    opacity: 0.5; 
+}
+
+/* --- Flash Overlay --- */
+#flash-overlay {
+    position: fixed; 
+    inset: 0; 
+    z-index: 9999; 
+    pointer-events: none;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    flex-direction: column;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.flash-hidden { opacity: 0; }
+.flash-visible { opacity: 1; }
+
+.flash-success { background: rgba(16, 185, 129, 0.95); }
+.flash-error { background: rgba(239, 68, 68, 0.95); }
+
+.flash-icon { 
+    font-size: 6rem; 
+    color: white; 
+    margin-bottom: 16px; 
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
+}
+.flash-text { 
+    color: white; 
+    font-size: 1.8rem; 
+    font-weight: 800; 
+    font-family: 'Playfair Display', serif; 
+}
+
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
